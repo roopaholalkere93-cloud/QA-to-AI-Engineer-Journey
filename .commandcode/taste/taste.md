@@ -1,0 +1,1 @@
+- In the AITESTERBLUEPRINT4X project, always save generated test artifacts, deliverables, and other output under the "Chapter 01_LLM Basics" folder. Confidence: 1.0
