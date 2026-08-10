@@ -62,6 +62,7 @@ Therefore, according to your rule, these details are not invented in the test ca
 
 Your rule specifically says that when information is missing, we should state "Insufficient information to determine."
 
+<|> Markdown
 3. Generated Test Cases
 
 Below are test cases generated only from the verified PRD information.
