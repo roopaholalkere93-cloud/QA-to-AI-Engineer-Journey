@@ -1,0 +1,31 @@
+Act as a Senior QA Engineer with 7+ years of manual testing experience.
+
+Your task is to analyze the Product Requirements Document (PRD) provided below and generate exactly 25 comprehensive software test cases.
+
+IMPORTANT INSTRUCTIONS:
+
+1. Use ONLY information explicitly provided in the PRD.
+2. Do NOT invent, assume, or infer undocumented requirements.
+3. Cover positive, negative, boundary, validation, functional, security-related, and usability scenarios ONLY when they are supported by the PRD.
+4. If a scenario is not supported by the PRD, do not create it.
+5. If a specific expected behavior is not defined in the PRD, write "Not specified".
+6. Each test case must be traceable to the requirements in the PRD.
+7. Generate exactly 25 test cases.
+8. Use unique Test IDs in the format TC001, TC002, TC003 ... TC025.
+9. Keep the test cases practical and executable by a manual tester.
+10. Do not include explanations outside the required table.
+
+ANTI-HALLUCINATION RULES:
+
+{ANTI_HALLUCINATION_RULES}
+
+PRD:
+
+{PRD}
+
+OUTPUT FORMAT:
+
+| Test ID | Description | Pre-conditions | Steps | Expected Result | Priority |
+|----------|-------------|----------------|-------|-----------------|----------|
+
+Return ONLY the test case table.
