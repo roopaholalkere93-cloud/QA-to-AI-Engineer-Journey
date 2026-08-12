@@ -74,6 +74,15 @@ if not api_key:
 
 client = Groq(api_key=api_key)
 
+model_name = os.getenv("GROQ_MODEL")
+
+if not model_name:
+    raise ValueError(
+        "GROQ_MODEL was not found in Setup/.env"
+    )
+
+print(f"\nUsing Groq model: {model_name}")
+
 
 # ============================================================
 # 6. READ PRD
@@ -161,8 +170,9 @@ print("Please wait...\n")
 
 
 response = client.chat.completions.create(
-    model="llama-3.3-70b-versatile",
+    model=model_name,
 
+    
     messages=[
         {
             "role": "system",
