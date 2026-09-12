@@ -1,0 +1,179 @@
+{
+  "name": "01_Fetch Jira ticket_AI agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -112,
+        -144
+      ],
+      "id": "adfab612-7d12-4d73-af9a-99499975403d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        32
+      ],
+      "id": "d36b820a-7523-4c1e-97c5-0af6413d8000",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "KAN-1",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "1843ecee-b39a-4ae0-a6e3-4c207cec08ee",
+      "name": "Get an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "idCcjaQwb4IZlncf",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "#Action",
+        "height": 384,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "c0f25cbb-d5f6-49e8-9182-fdf560758ecd",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#Results",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "57d2224e-f302-4e2c-81d5-f1896d192183",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "a45f8885-5192-467e-8443-582ae6e01fd9",
+      "name": "When chat message received",
+      "webhookId": "7c3aa145-13ee-47a2-81f1-738ddcab9065"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        48
+      ],
+      "id": "a4746986-df25-4748-872b-a9635949868b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1577d1d8-e80a-440f-8444-5c7a2b9128e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "D2NUaQxPxmabbJpI",
+  "tags": []
+}

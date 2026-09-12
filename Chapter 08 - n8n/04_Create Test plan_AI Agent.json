@@ -1,0 +1,215 @@
+{
+  "name": "04_Create Test plan_AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Lead QA Engineer responsible for creating formal Test Plans.\n\nWhen asked to generate a Test Plan for the VWO (Visual Website Optimizer) Login Dashboard, structure a comprehensive plan following this layout:\n\n1. SUMMARY:\n   Format as: [Test Plan] VWO Login Dashboard - Feature Execution Plan\n\n2. DESCRIPTION:\n   Structure the details as follows:\n\n   # 1. Introduction & Objectives\n   - Scope of testing for VWO Login Dashboard (Functional validation, security checks, and cross-browser testing).\n\n   # 2. Features to be Tested\n   - Email & Password input validation\n   - \"Remember Me\" session persistence\n   - Password Reset / \"Forgot Password\" redirection\n   - SSO (Single Sign-On) login flow\n   - Error messaging for invalid/locked accounts\n\n   # 3. Resource & Responsibility Matrix\n   - Test Planning & Execution: QA Lead & Manual QA Team\n   - Defect Verification: QA Team\n   - Environment Setup & API Access: DevOps / Backend Engineering\n\n   # 4. Schedule & Milestones\n   - Test Case Design: Day 1\n   - Test Execution (Smoke & Functional): Day 2 - Day 3\n   - Regression & Bug Verification: Day 4\n   - Sign-off: Day 5\n\n   # 5. Deliverables\n   - Executed Test Cases, Defect Reports (Jira Bugs), and Final QA Sign-off Summary.\n\nUse the Jira tool to create this as a Task in the VWO Project board with the generated Summary and Description."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "c829a549-4d01-4890-baee-a9b8bb36a8bb",
+      "name": "AI Agent",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -64,
+        32
+      ],
+      "id": "eabe5b27-7774-4388-9af3-899135a0d057",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "#Trigger",
+        "height": 256,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "004dada6-795f-4060-831a-d3b49fd66b31",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#Action",
+        "height": 384,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "d20f6844-8ece-4c63-8e24-f9075912fe85",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#Results",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "1904956e-148e-4329-a107-a615da8a7dfb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "2c357432-49d5-4a53-9b06-0fbd672a5910",
+      "name": "When chat message received",
+      "webhookId": "c3ecab40-0b03-4f98-afec-5388cfb6d3ac"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "83d83eed-7ef8-4b54-9d77-7f0ac0fc8d20",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "VWO Login"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10003",
+          "mode": "list",
+          "cachedResultName": "Task"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {
+          "priority": {
+            "__rl": true,
+            "value": "2",
+            "mode": "list",
+            "cachedResultName": "High"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "d3c99555-3ae3-4059-bc03-24e269c2d4df",
+      "name": "Create a Jira Ticket",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "idCcjaQwb4IZlncf",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Jira Ticket": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "927299d0-1e8e-4893-aa12-30d1d8189899",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "I7NMSyx7MePD2SpW",
+  "tags": []
+}

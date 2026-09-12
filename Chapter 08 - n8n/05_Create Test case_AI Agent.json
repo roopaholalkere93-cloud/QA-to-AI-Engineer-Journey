@@ -1,0 +1,215 @@
+{
+  "name": "05_Create Test case_AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a QA Engineer specializing in writing detailed, actionable test scenarios.\n\nWhen asked to generate Test Cases for the VWO Login Dashboard, generate a comprehensive suite of structured test scenarios following this format:\n\n1. SUMMARY:\n   Format as: [Test Suite] VWO Login Dashboard - Comprehensive Test Cases\n\n2. DESCRIPTION:\n   Structure the test suite into categorized test cases with clear execution steps:\n\n   # Positive Scenarios\n   - TC-01: Successful Login with Valid Email & Password\n     - Pre-conditions: Active registered user account exists.\n     - Steps: 1. Navigate to VWO Login page. 2. Enter valid email and password. 3. Click \"Login\".\n     - Expected Result: User is authenticated and redirected to the VWO Dashboard homepage.\n\n   # Negative & Validation Scenarios\n   - TC-02: Login Attempt with Invalid Password\n     - Steps: 1. Enter valid email and incorrect password. 2. Click \"Login\".\n     - Expected Result: Display error \"Invalid email or password\". User remains on login page.\n   - TC-03: Form Validation for Blank Inputs\n     - Steps: 1. Leave Email and Password fields blank. 2. Click \"Login\".\n     - Expected Result: Inline validation highlights required fields.\n\n   # Security Scenarios\n   - TC-04: Password Input Masking & Security\n     - Steps: 1. Enter text in Password field.\n     - Expected Result: Characters are masked (hidden as dots/asterisks) with an optional toggle to reveal.\n   - TC-05: Account Lockout on Multiple Failed Attempts\n     - Steps: 1. Enter incorrect password 5 consecutive times.\n     - Expected Result: Account is temporarily locked with an explicit security warning message.\n\nUse the Jira tool to log these Test Cases as a Task in the VWO Project board using the generated Summary and Description."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "5c37189a-3b0a-4508-8997-6965217f4f51",
+      "name": "AI Agent",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -64,
+        32
+      ],
+      "id": "b4d78095-4860-450f-af63-461b6f972ad8",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "#Trigger",
+        "height": 256,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "c45ec821-0c82-4de5-ab54-24b3f4b51e2c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#Action",
+        "height": 384,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "f7fc8c9f-8282-4480-a389-4d20a4b980b2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#Results",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "56d9bb44-265a-4d59-809a-bd7ff97341ca",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "6266c2b2-42ff-4e1c-80a5-92ec025fb62f",
+      "name": "When chat message received",
+      "webhookId": "91e30de7-ac1d-4222-b3a6-bebd6b31812c"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "1f0d768a-3571-4f67-bbfd-d46407abc47f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "VWO Login"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10003",
+          "mode": "list",
+          "cachedResultName": "Task"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {
+          "priority": {
+            "__rl": true,
+            "value": "2",
+            "mode": "list",
+            "cachedResultName": "High"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "929c7b63-beee-4780-880c-26cf1cc43c57",
+      "name": "Create a Jira Ticket",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "idCcjaQwb4IZlncf",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Jira Ticket": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5a6fc8d6-ca8d-46c4-92d9-19980e375391",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "lI5ZzELE306WWpdh",
+  "tags": []
+}

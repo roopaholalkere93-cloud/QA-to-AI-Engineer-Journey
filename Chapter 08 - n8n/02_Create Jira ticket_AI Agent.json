@@ -1,0 +1,216 @@
+{
+  "name": "02_Create Jira ticket_AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "create jira ticket  for login page issue using the a tool attached as \"Create a Jira\" with the proper description on the steps to reproduce and other details & give it  to user."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "4ced7d8a-2183-4a8d-95b1-41d669b79752",
+      "name": "AI Agent",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        32
+      ],
+      "id": "058656fd-630a-499a-a23e-3c46e361b932",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "#Trigger",
+        "height": 256,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "c6b335b0-036d-44bf-89ad-92fbcd052071",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#Action",
+        "height": 384,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "11185d23-30c8-48d4-be65-e664265da5d2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#Results",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "ff5a5edd-2dd7-4b5e-a787-b2e51de51bc3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "98339a2c-4d95-4dba-a753-415f15678211",
+      "name": "When chat message received",
+      "webhookId": "14191f5b-caae-4f1d-a013-3aa6f42eb71f"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "b7cbb076-fedb-44e7-91c5-2f4408db7942",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "QA Testing Practice"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10006",
+          "mode": "list",
+          "cachedResultName": "Bug"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "priority": {
+            "__rl": true,
+            "value": "2",
+            "mode": "list",
+            "cachedResultName": "High"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "41f3ed3a-415a-429e-a91e-74d1f723d501",
+      "name": "Create a Jira",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "idCcjaQwb4IZlncf",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Jira": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1777b363-2942-42ba-88b0-df96db993bc6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "3hU4eBuvV4bmvdj9",
+  "tags": []
+}

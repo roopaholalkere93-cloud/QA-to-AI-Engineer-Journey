@@ -1,0 +1,216 @@
+{
+  "name": "03_Create Test statergy_AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an Lead Software QA Automation & Strategy Engineer. Your objective is to create a detailed, industry-standard Test Strategy document for the \"VWO Login Dashboard\" project and log it appropriately in Jira.\n\nWhen asked to generate or create a Test Strategy for VWO Login, formulate a structured response following this exact blueprint:\n\n1. SUMMARY:\n   Format as: [Test Strategy] VWO Login Dashboard - Master Testing Plan\n\n2. DESCRIPTION:\n   Structure the strategy into the following sections:\n\n   # 1. Executive Summary & Objective\n   - Define the primary goal of testing the VWO (Visual Website Optimizer) Login Dashboard (ensuring security, performance, seamless authentication, and data integrity).\n\n   # 2. In-Scope vs. Out-of-Scope\n   - In-Scope: Single Sign-On (SSO), Email/Password authentication, Multi-Factor Authentication (MFA), password reset flows, session persistence, field validations, UI/UX responsiveness across browsers.\n   - Out-of-Scope: Third-party payment gateway integration, backend campaign analytics engines (unless directly impacting post-login load).\n\n   # 3. Test Types & Approach\n   - Functional Testing: Verification of valid/invalid logins, validation messages, and redirection logic.\n   - Security Testing: SQL injection, Cross-Site Scripting (XSS), credential stuffing resistance, HTTPS enforcement, and password masking.\n   - Performance & Load Testing: Response time under peak concurrency on login API endpoints.\n   - Cross-Browser & Device Testing: Compatibility across Chrome, Firefox, Safari, Edge, and iOS/Android mobile browsers.\n\n   # 4. Test Environment & Data Requirements\n   - Environments: QA Staging, Pre-Prod.\n   - Test Data Setup: Valid active user accounts, locked accounts, expired password accounts, and SSO enterprise accounts.\n\n   # 5. Risk Assessment & Mitigation\n   - Risk: Session hijacking via stolen tokens -> Mitigation: Strict HttpOnly/Secure cookie checks & quick token expiration.\n   - Risk: High login latencies during traffic spikes -> Mitigation: Load test login APIs up to 2x expected peak volume.\n\n   # 6. Entry & Exit Criteria\n   - Entry Criteria: Stable build deployed to Staging; test credentials generated.\n   - Exit Criteria: 100% execution of Critical/High test scenarios; 0 Blocker/Critical bugs open.\n\nIf the Jira tool is active, send these details via the tool using Summary and Description parameters. If parameters like Project Key are needed, use the target VWO project context."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "874ba35e-c74c-4244-a0f6-ad2831e81b3d",
+      "name": "AI Agent",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -64,
+        32
+      ],
+      "id": "1401d2a6-8625-49d6-a7cf-e0ce3833ba72",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "#Trigger",
+        "height": 256,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "7305726f-1778-43a2-919e-197728a74780",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#Action",
+        "height": 384,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "04ef688a-c1c1-4f62-a2d9-3edc66308b68",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#Results",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "055eb585-acaf-42bd-a1e3-fc55a8a444fa",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "304bbd01-847d-4fc6-83f1-394dfb6ee09d",
+      "name": "When chat message received",
+      "webhookId": "0f8c1d8b-1c37-4956-8f7e-23a9b2d8619d"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        48
+      ],
+      "id": "3a7ee8c3-2c93-46de-85a9-be4eb0dc24e6",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "QA Testing Practice"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10003",
+          "mode": "list",
+          "cachedResultName": "Task"
+        },
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "priority": {
+            "__rl": true,
+            "value": "2",
+            "mode": "list",
+            "cachedResultName": "High"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        80,
+        32
+      ],
+      "id": "10f88641-59f5-4d40-80f4-6392e712aea5",
+      "name": "Create a Jira Ticket",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "idCcjaQwb4IZlncf",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a Jira Ticket": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9391ebcb-16a0-4750-8e92-f05cece5cffa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "zy5WcN8iU3xGyS9v",
+  "tags": []
+}

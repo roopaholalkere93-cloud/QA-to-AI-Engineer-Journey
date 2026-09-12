@@ -1,0 +1,178 @@
+{
+  "name": "06_Simple RCA Agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        0
+      ],
+      "id": "1f8162e8-8263-466a-877e-e91a0e8dca80",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Bug_Title\": \"Payment gateway timeout on checkout\",\n  \"Steps_to_Reproduce\": \"1. Select PayPal at checkout. 2. Click Pay Now. 3. Screen spins for 30 seconds and shows 504 Gateway Timeout.\",\n  \"Error_Logs\": \"504 Gateway Time-out - server failed to respond in time\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -656,
+        -16
+      ],
+      "id": "ba0dab5a-b594-4ad2-b926-7a36de4cb8af",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Please generate a Root Cause Analysis (RCA) report based on this bug detail:\n\nBug Title: {{ $json.Bug_Title }}\nSteps to Reproduce: {{ $json.Steps_to_Reproduce }}\nError Logs: {{ $json.Error_Logs }}",
+        "options": {
+          "systemMessage": "You are a helpful asYou are an expert QA and DevOps Engineer. Analyze the provided bug information and output a clear Root Cause Analysis (RCA) report containing:\n1. Problem Summary\n2. Probable Root Cause\n3. Recommended Action Steps to Fix\n4. Preventative Recommendations for the Futuresistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -480,
+        -32
+      ],
+      "id": "2050acca-3f82-4cec-aac1-a2304861c745",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        160
+      ],
+      "id": "67324689-ebef-42ac-9c3f-145c6e51ff0e",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "v0Y1tTjCQpBBCBJY",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "=RCA_{{ $('Edit Fields').item.json.Bug_Title.replace(/[^a-zA-Z0-9]/g, \"_\") }}_{{ $today.format('yyyy-MM-dd') }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        -32
+      ],
+      "id": "9a357ecd-6256-4a88-b6ab-abf9be88fa0f",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "8815331839",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        -48
+      ],
+      "id": "58b5254c-1145-40da-837b-22cf82d19de0",
+      "name": "Send a document",
+      "webhookId": "f14b3745-3de5-4242-97c4-285395d183fb",
+      "credentials": {
+        "telegramApi": {
+          "id": "57T6mDOxdXjXOdSj",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "028fae8a-8ac0-4de9-b99f-061b4be05940",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7d11464f43f04fd869a8b6ea966e9460784964dfaeada7a9985a34eb8e20dc46"
+  },
+  "nodeGroups": [],
+  "id": "y8MhO75ucG1uvfiA",
+  "tags": []
+}
